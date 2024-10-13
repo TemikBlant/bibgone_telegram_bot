@@ -13,7 +13,7 @@ from src.routers.elixir_sheet_router import elixir_sheet_router
 from src.routers.spots_router import spots_router
 
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = "7213288419:AAGaTrDiRkxmYEnUKVN8nnvpIHkPzYpHFkM"
+TOKEN = os.getenv("BOT_TOKEN")
 
 # All handlers should be attached to the Router (or Dispatcher)
 
