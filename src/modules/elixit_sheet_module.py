@@ -234,7 +234,6 @@ def elixir_sheet(
     #       f'{max(1, round(min_skill))} ({max(1, round(min_skill2))}) Skill Rewinds\n----------------------------------\n'
     #       f'{max(1, round(em_rewinds + min_skill))} ({max(1, round(em_rewinds2 + em_rewinds + min_skill2))}) Total Rewinds')
 
-    print(skills_int2)
     msg = NameValueModel(
         name=f"Минимум ревов для {format(all_skills_old_int, '.2f')}{all_skills_old_suffix} - "
              f"{format(all_skills_new_int, '.2f')}{all_skills_new_suffix} "
@@ -245,5 +244,4 @@ def elixir_sheet(
               f'{em_rewinds2 + em_rewinds} ревов для ЕМ \n'
               f'{max(1, round(min_skill2))} ревов для скиллов \n'
               f'{max(1, round(em_rewinds2 + em_rewinds + min_skill2))} суммарно ревов')
-
     return msg
