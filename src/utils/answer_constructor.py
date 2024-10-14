@@ -4,7 +4,7 @@ from src.models.common_models import NameValueModel
 def code_style_decorator(func):
     def wrapper(*args, **kwargs):
         original_msg = func(*args, **kwargs)
-        code_style_msg = f"<pre>{original_msg}</pre>"
+        code_style_msg = f"<code>{original_msg}</code>"
         return code_style_msg
 
     return wrapper

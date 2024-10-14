@@ -9,7 +9,8 @@ help_router = Router()
 
 commands_list = [
     NameValueModel(name='/multiplier', value='считает сколько даст дней хУрона'),
-    NameValueModel(name='/calc_optimal_rewinds', value='считает оптимальное количестов ревов'),
+    NameValueModel(name='/calc_optimal_rewinds', value='считает оптимальное количестов ревов для необходимых '
+                                                       'значений скиллов и ем'),
     NameValueModel(name='/optimal_spot', value='высчитывает оптимальный спот для n+k дней'),
 ]
 
@@ -18,10 +19,12 @@ commands_list = [
 async def commands_command(
         message: types.Message
 ):
+    footer_msg = "\n <b>для детального описания комманды добавьте '_help' в ее конец</b>"
     await message.answer(
         generate_multi_simple_answer(
             commands_list
-        ),
+        )
+        + footer_msg,
         reply_to_message_id=message.message_id
     )
 
