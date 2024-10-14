@@ -3,13 +3,13 @@ from aiogram import Router
 from aiogram.filters import Command, CommandObject
 
 from src.utils.answer_constructor import generate_str_answer
-from src.modules.damage_to_days_module import damage_to_days
+from src.modules.damage_module import multiplier
 
-damage_to_days_router = Router()
+damage_router = Router()
 
 
-@damage_to_days_router.message(Command(commands=["damage_to_days"]))
-async def damage_to_days_coomand(
+@damage_router.message(Command(commands=["log2"]))
+async def multiplier_command(
     message: types.Message,
     command: CommandObject
 ):
@@ -19,13 +19,26 @@ async def damage_to_days_coomand(
             raise AttributeError
         damage_multi = int(splitted_arg[0])
     except AttributeError:
-        await message.answer('Проверь параметры команды. \n /damage_to_days "множитель дней"',
+        await message.answer('Проверь параметры команды. \n /damage_to_days "множитель урона"',
                              reply_to_message_id=message.message_id)
     else:
-        days = damage_to_days(damage_multi)
+        days = multiplier(damage_multi)
         await message.answer(
             generate_str_answer(
                 days
             ),
             reply_to_message_id=message.message_id
         )
+
+
+@damage_router.message(Command(commands=["нармулес_душнила"]))
+async def multiplier_command(
+    message: types.Message,
+    command: CommandObject
+):
+    await message.answer(
+        generate_str_answer(
+            "Да"
+        ),
+        reply_to_message_id=message.message_id
+    )
