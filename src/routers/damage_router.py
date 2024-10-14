@@ -17,9 +17,15 @@ async def multiplier_command(
         splitted_arg = command.args.split(" ")
         if len(splitted_arg) != 1:
             raise AttributeError
-        damage_multi = int(splitted_arg[0])
+        damage_multi = float(splitted_arg[0].replace(',', '.'))
+        if damage_multi < 1:
+            raise ValueError
     except AttributeError:
-        await message.answer('Проверь параметры команды. \n /damage_to_days "множитель урона"',
+        await message.answer('Проверь параметры команды. \n /multiplier "множитель урона"',
+                             reply_to_message_id=message.message_id)
+    except ValueError:
+        await message.answer('Проверь параметры команды. \n /multiplier. Параметр "множитель урона" должен быть'
+                             ' числом и быть больше 1',
                              reply_to_message_id=message.message_id)
     else:
         days = multiplier(damage_multi)
