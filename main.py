@@ -11,9 +11,10 @@ from aiogram.types import Message, BotCommand
 
 from src.routers.elixir_sheet_router import elixir_sheet_router
 from src.routers.spots_router import spots_router
+from src.routers.damage_to_days_router import damage_to_days_router
 
 # Bot token can be obtained via https://t.me/BotFather
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = getenv("BOT_TOKEN")
 
 # All handlers should be attached to the Router (or Dispatcher)
 
@@ -21,6 +22,7 @@ dp = Dispatcher()
 
 dp.include_router(elixir_sheet_router)
 dp.include_router(spots_router)
+dp.include_router(damage_to_days_router)
 
 
 async def main() -> None:

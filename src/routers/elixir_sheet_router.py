@@ -3,7 +3,7 @@ from aiogram import Router
 from aiogram.filters import Command, CommandObject
 
 from src.utils.answer_constructor import generate_simple_answer
-from src.modules.elixit_sheet_module import elixir_sheet
+from src.modules.elixir_sheet_module import elixir_sheet
 
 elixir_sheet_router = Router()
 

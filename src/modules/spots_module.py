@@ -2,6 +2,7 @@ from src.utils.csv_helper import read_csv
 from src.constants.shared_constants import boss, mob_scores, boss_scores, boss_scores2, mobs
 from src.models.common_models import NameValueModel
 
+
 class SpotsModule:
 
     def __init__(self):
@@ -249,29 +250,157 @@ class SpotsModule:
         alta_matrice_babana[index_fishy1][1] = 1000000
         index_fishy2, minim_fishy2, minimdodo2, day2, skip2 = minim()
         alta_matrice_babana[index_fishy2][1] = 1000000
-        index_fishy3, minim_fishy3, minimdodo3, day3, skip3 = minim()
 
-        # embed = discord.Embed(title="Rewind Spot Calculator <a:kafkakurukuru:1118233531110412461>", color=0x71368a)
-        # if mode == 1:
-        #     embed.add_field(name='', value=f"**At Day {kek}, __Day {spot_range(day_minim, tj, express, 1, double_rewind)}__ ({skip} Days last portal) has the best rewind score of __{format(minim_fishy, '.2f')}__ "
-        #                                    f"({round(minim_dodo)}) for the next "
-        #                                    f"{day_range} days.\n\nThe next best 2 spots are __{spot_range(day2, tj, express, 1, double_rewind)}__ ({skip2} Days last portal) with a score of __{format(minim_fishy2, '.2f')}__"
-        #                                    f" ({round(minimdodo2)}) and __{spot_range(day3, tj, express, 1, double_rewind)}__ ({skip3} Days last portal) with a score of __{format(minim_fishy3, '.2f')}__ ({round(minimdodo3)}). "
-        #                                    f"The score inside brackets represents [Dodora's Rewind Sheet](https://bit.ly/Dodo_Rewind_Sheet) Cost.**", inline=False)
-        # else:
-        #     embed.add_field(name='', value=f"**At Day {kek}, __Day {spot_range(day_minim, tj, express, 1, double_rewind)}__ ({skip} Days last portal) has the best rewind time of __{secunda(int(minim_fishy))}__ for the next "
-        #                                    f"{day_range} days.\n\nThe next best 2 spots are __{spot_range(day2, tj, express, 1, double_rewind)}__ ({skip2} Days last portal) with a time of __{secunda(int(minim_fishy2))}__"
-        #                                    f" and __{spot_range(day3, tj, express, 1, double_rewind)}__ ({skip3} Days last portal) with a time of __{secunda(int(minim_fishy3))}__.**\n\n***__Note: These times are approximations"
-        #                                    f" and may not be 100% accurate.__***", inline=False)
-    #
-    # embed.add_field(name='', value="*These calculations are using data from [Fishy's Rewind Sheet]"
-    #                                "(https://bit.ly/Fishy_Rewind_Sheet). If you want to use No TJ/No Express/Titor/Double rewind options, look at the optional parameters.*")
-    # embed.set_footer(text="If you spot any issues with this bot, please ping '@_tyrael.'",
-    #                  icon_url="https://cdn.discordapp.com/emojis/1139252590278889529.gif")
-    #
-    # return embed
-    #
         msg = NameValueModel(name=f"Лучшее время спота для следующих {day_range} дней \n",
                              value=f"дни {self.spot_range(day_minim, tj, express, 1, double_rewind)} "
                                    f"имеют лучшее время рева - {self.secunda(int(minim_fishy))}")
         return msg
+
+    def detailed_spot(self, daya: int, double_rewind: bool, titor: float, express: bool = True, tj: bool = True):
+        response = {}
+        response['head_response'] = "PORTAL --- DAY --- MOB --- BOSS\n--------------------------------\n" \
+                                    "Rewind Spot Calculator\n-----------------------------------------"
+
+        score_fishy_list = self.spot_score(day=daya, titor=titor, express=express, tj=tj, double_rewind=double_rewind,
+                                           mode=1)
+        score_fishy = score_fishy_list[1]
+        score_dodo = score_fishy_list[3]
+        if daya > 1000:
+            score_seconds = self.secunda(
+                self.spot_score(day=daya, titor=titor, express=express, tj=tj, double_rewind=double_rewind, mode=2)[1])
+            print( f"This spot has a score of {score_fishy} ({score_dodo}) or " \
+                              f"{score_seconds} minutes, with a {score_fishy_list[4]} Day last portal.")
+        else:
+            print( f"This spot has a score of {score_fishy} ({score_dodo}), with a {score_fishy_list[4]}" \
+                      " Day last portal.")
+        if express:
+            portal = 10 if daya // 500 == 0 else (daya // 500) * 10
+        else:
+            portal = 5 if daya // 500 == 0 else (daya // 500) * 5
+        portal_count = 1
+        initial = daya
+        if tj:
+            if double_rewind:
+                daya = int(self.spot_round(self.spot_round(daya * 0.75) * 0.75))
+            else:
+                daya = int(self.spot_round(daya * 0.75))
+        else:
+            if double_rewind:
+                daya = int(self.spot_round(self.spot_round(daya * 0.5) * 0.5))
+            else:
+                daya = int(self.spot_round(daya * 0.5))
+        i = 0
+        if daya % 5 != 0:
+            return 0
+        ceva = "```\n"
+        while daya < initial:
+            if i < 9:
+                ceva += f"{portal_count}:  " f"{daya} " + f"M. {self.lista_csv[(daya // 5) - 1][1]}" + f" B. " \
+                                                                                                       f"{boss[daya % 100 // 5].title()}\n"
+            else:
+                ceva += f"{portal_count}: " f"{daya} " + f"M. {self.lista_csv[(daya // 5) - 1][1]}" + f" B. " \
+                                                                                                      f"{boss[daya % 100 // 5].title()}\n"
+            if i % 14 == 0 and i >= 14:
+                ceva += "\n```"
+                ceva = "```\n"
+                ceva += f"{portal_count}: " f"{daya} " + f"M. {self.lista_csv[(daya // 5) - 1][1]}" + f" B. " \
+                                                                                                      f"{boss[daya % 100 // 5].title()}\n"
+            daya += portal
+            portal_count += 1
+            i += 1
+
+        ceva += "\n```"
+        print(response)
+        print(ceva)
+        return ceva
+
+    def spots(self, daya: int, day_range: int, titor: float, tj: bool=True, express: bool=True, mode: int=2, double_rewind: bool=False):
+        kek = daya
+        spots = []
+        matrice = []
+        lista = []
+        skip = 0
+        start = startcopy = self.spot_range(daya, tj, express, 2, double_rewind)
+        spots.append(start)
+
+        while start - startcopy < day_range:
+            start = self.spot_range(start + 1, tj, express, 2, double_rewind)
+            spots.append(start)
+
+        minim_fishy, minim_dodo = 100000000, 100000000
+        day_minim = 0
+        if mode == 1:
+            print("DAY --- SCORE --- LAST BOSS --- LAST PORTAL SKIP\n--------------------------------")
+        else:
+            print("DAY --- TIME --- LAST BOSS --- LAST PORTAL SKIP\n--------------------------------")
+        print("Rewind Spot Calculator <a:kafkakurukuru:1118233531110412461>\n------------------------")
+        for day in spots:
+            lista = self.spot_score(day=day, titor=titor, express=express, tj=tj, double_rewind=double_rewind, mode=mode)
+            initial = lista[0]
+            score = lista[1]
+            dodo_score = round(lista[3])
+            if minim_fishy > score:
+                day_minim = initial
+                minim_fishy = score
+                minim_dodo = dodo_score
+                skip = lista[4]
+            matrice.append(lista)
+
+        print(matrice)
+        if mode == 1:
+            value = f"**At Day {kek}, __Day {self.spot_range(day_minim, tj, express, 1, double_rewind)}__ has the best rewind score of {format(minim_fishy, '.2f')} " \
+                    f"({round(minim_dodo)}) with a {skip} Day last portal skip for the next " \
+                    f"{day_range} days. The scores inside brackets represent [Dodora's Rewind Sheet]" \
+                    f"(https://bit.ly/Dodo_Rewind_Sheet) Costs.**"
+        else:
+            value = f"**At Day {kek}, __Day {self.spot_range(day_minim, tj, express, 1, double_rewind)}__ has the best time of __{self.secunda(int(minim_fishy))}__ with a " \
+                    f"{skip} day last portal skip for the next " \
+                    f"{day_range} days.**"
+        print(value)
+        ceva = '```\n'
+        counter = 0
+        min_fishy = 1000000000
+        min_dodo = 0
+        min_day = 0
+        prev = 0
+        for lista in matrice:
+            spots = self.spot_range(lista[0], tj, express, 1, double_rewind)
+            if prev == spots:
+                pass
+            else:
+                if counter < 10:
+                    if mode == 1:
+                        ceva += f"{self.spot_range(lista[0], tj, express, 1, double_rewind)}" + " - " + f"{format(lista[1], '.2f')}" + f" ({lista[3]})" + " - " + f"{lista[2]} ({lista[4]} skip)\n"
+                    else:
+                        ceva += f"{self.spot_range(lista[0], tj, express, 1, double_rewind)}" + " - " + f"{self.secunda(int(lista[1]))}" + " - " + f"{lista[2]} ({lista[4]} skip)\n"
+                    counter += 1
+                    if min_fishy > lista[1]:
+                        min_day = lista[0]
+                        min_fishy = lista[1]
+                        min_dodo = lista[3]
+                elif counter == 10:
+                    ceva += "\n```"
+                    counter = 0
+                    if mode == 1:
+                        print(ceva)
+                    else:
+                        print(ceva)
+                    ceva = '```\n'
+                    min_fishy = 1000000000
+                    if min_fishy > lista[1]:
+                        min_day = lista[0]
+                        min_fishy = lista[1]
+                        min_dodo = lista[3]
+                    if mode == 1:
+                        ceva += f"{self.spot_range(lista[0], tj, express, 1, double_rewind)}" + " - " + f"{format(lista[1], '.2f')}" + f" ({lista[3]})" + " - " + f"{lista[2]} ({lista[4]} skip)\n"
+                    else:
+                        ceva += f"{self.spot_range(lista[0], tj, express, 1, double_rewind)}" + " - " + f"{self.secunda(int(lista[1]))}" + " - " + f"{lista[2]} ({lista[4]} skip)\n"
+            prev = spots
+
+        ceva += "\n```"
+        if min_fishy > lista[1]:
+            min_day = lista[0]
+            min_fishy = lista[1]
+            min_dodo = lista[3]
+
+        print(ceva)
