@@ -20,6 +20,7 @@ async def multiplier_command(
         damage_multi = float(splitted_arg[0].replace(',', '.'))
         if damage_multi < 1:
             raise ValueError
+
     except AttributeError:
         await message.answer('Проверь параметры команды. \n /multiplier "множитель урона"',
                              reply_to_message_id=message.message_id)

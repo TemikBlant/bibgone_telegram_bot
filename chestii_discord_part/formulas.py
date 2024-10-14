@@ -1350,29 +1350,6 @@ class Formulas(commands.GroupCog, name="calc"):
             await interaction.followup.send(embed=embed)
         print("Done w/ Damage to Day")
 
-    @app_commands.command(name="multiplier", description="Input a damage multiplier to receive a Day equivalent")
-    @app_commands.describe(multiplier="Multiplier value of the number you want to calculate. Example: A x50 multiplier is worth 62 days")
-    async def multiplier(self, interaction: discord.Interaction, multiplier: int, invisible: bool = True) -> None:
-        print(f"Trying Multiplier with the following data: Multiplier: {multiplier}")
-        if multiplier < 0:
-            await interaction.response.send_message("Invalid data, please try again. Example: a x50 damage increase is "
-                                                    "equivalent to 62 days.", ephemeral=True)
-        else:
-
-            embed = discord.Embed(title="Multiplier to Day Calculator <a:kafkakurukuru:1118233531110412461>",
-                                  color=0x71368a)
-            embed.add_field(name='', value=f"A **x{multiplier}** Damage multiplier is worth **{round(math.log(multiplier, 2) * 11)}** Days! *This is also equal to "
-                                           f"**{round(math.log(multiplier * multiplier, 2) * 11)}** Days for Crit Damage.*", inline=False)
-            embed.set_footer(text="If you spot any issues with this bot, please ping '@_tyrael.'",
-                             icon_url="https://cdn.discordapp.com/emojis/1139252590278889529.gif")
-            if interaction.channel.name in ["bot", "amogus-testing", "bot-commands"]:
-                await interaction.response.send_message(embed=embed)
-            elif invisible is True:
-                await interaction.response.send_message(embed=embed, ephemeral=True)
-            else:
-                await interaction.response.send_message(embed=embed)
-        print("Done w/ Multiplier")
-
     @app_commands.command(name="rewindspots", description="Input a day & the days to look ahead to receive the Rewind "
                                                           "Scores for the said spots. Max 500.")
     @app_commands.describe(starting_day="Starting day for which you want to calculate spots for")
