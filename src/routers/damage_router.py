@@ -8,7 +8,7 @@ from src.modules.damage_module import multiplier
 damage_router = Router()
 
 
-@damage_router.message(Command(commands=["log2"]))
+@damage_router.message(Command(commands=["multiplier"]))
 async def multiplier_command(
     message: types.Message,
     command: CommandObject
